@@ -1,0 +1,46 @@
+# Grate Configuration for Analytics Database
+# https://erikbra.github.io/grate/
+
+# Database connection settings
+database: "dbAffiliate_Analytics"
+connectionString: "Server=localhost;Database=dbAffiliate_Analytics;Integrated Security=true;TrustServerCertificate=true"
+
+# Script directory settings
+sqlFilesDirectory: "./database/grate"
+schemaName: "dbo"
+
+# Environment settings
+environment: "LOCAL"
+version: "1.0.0"
+
+# Transaction settings
+transaction: true
+commandTimeout: 300
+
+# Logging settings
+verbosity: "Information"
+silent: false
+dryRun: false
+
+# Advanced settings
+userTokens:
+  ApplicationName: "Analytics Platform"
+  Version: "1.0.0"
+  
+warnOnOneTimeScriptChanges: true
+warnAndIgnoreOnOneTimeScriptChanges: false
+
+# Folder configuration (using Grate defaults)
+folders:
+  up: "up"
+  runAfterCreateDatabase: "runAfterCreateDatabase"
+  runBeforeUp: "runBeforeUp"
+  runFirstAfterUp: "runFirstAfterUp"
+  functions: "functions"
+  views: "views"
+  sprocs: "sprocs"
+  triggers: "triggers"
+  indexes: "indexes"
+  runAfterOtherAnyTimeScripts: "runAfterOtherAnyTimeScripts"
+  permissions: "permissions"
+  runAfterUp: "runAfterUp"

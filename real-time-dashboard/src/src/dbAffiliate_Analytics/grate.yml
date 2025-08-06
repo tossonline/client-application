@@ -1,0 +1,49 @@
+# Grate Configuration for dbAffiliate_Analytics
+# https://erikbra.github.io/grate/
+
+# Database connection settings
+database: "dbAffiliate_Analytics"
+connectionString: "Server=localhost;Database=dbAffiliate_Analytics;Integrated Security=true;TrustServerCertificate=true"
+
+# Script directory settings - using proper src folder structure
+sqlFilesDirectory: "./src/dbAffiliate_Analytics"
+schemaName: "dbo"
+
+# Environment settings
+environment: "LOCAL"
+version: "1.0.0"
+
+# Transaction settings
+transaction: true
+commandTimeout: 300
+
+# Logging settings
+verbosity: "Information"
+silent: false
+dryRun: false
+
+# Advanced settings for Analytics Platform
+userTokens:
+  ApplicationName: "Analytics Platform (.NET 8)"
+  Version: "1.0.0"
+  DatabaseName: "dbAffiliate_Analytics"
+  AggregateTypes: "CampaignAggregate,PlayerAggregate,PixelEventAggregate,MetricsAggregate,AnalyticsAggregate"
+  
+warnOnOneTimeScriptChanges: true
+warnAndIgnoreOnOneTimeScriptChanges: false
+
+# Folder configuration (using standard Grate folder names)
+# https://erikbra.github.io/grate/script-types/
+folders:
+  up: "up"                                    # One-time migration scripts
+  runAfterCreateDatabase: "runAfterCreateDatabase"  # Scripts run after database creation
+  runBeforeUp: "runBeforeUp"                 # Scripts run before migrations
+  runFirstAfterUp: "runFirstAfterUp"         # Scripts run first after up migrations
+  functions: "functions"                      # User-defined functions (recreated each run)
+  views: "views"                             # Database views (recreated each run)
+  sprocs: "sprocs"                           # Stored procedures (recreated each run)
+  triggers: "triggers"                       # Database triggers (recreated each run)
+  indexes: "indexes"                         # Additional indexes (recreated each run)
+  runAfterOtherAnyTimeScripts: "runAfterOtherAnyTimeScripts"  # Scripts run after anytime scripts
+  permissions: "permissions"                 # Permission scripts (recreated each run)
+  runAfterUp: "runAfterUp"                  # Scripts run after all up migrations
