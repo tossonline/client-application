@@ -8,11 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Affiliate.Platform.Repository.Abstractions" Version="2.1.2"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj" />
+        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

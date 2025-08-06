@@ -1,7 +1,5 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Affiliate.Platform.Messaging.Abstractions.Extensions;
-using Affiliate.Platform.Metrics.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Analytics.Application.Handlers.Extensions
@@ -10,14 +8,8 @@ namespace Analytics.Application.Handlers.Extensions
     {
         public static IServiceCollection AddHandlers(this IServiceCollection services)
         {
-            //TODO: Add Handler injection here
+            // TODO: Add Handler injection here using standard DI
             return services;
-        }
-
-        public static IMetricsBuilder AddHandlerMetrics(this IMetricsBuilder metricsBuilder)
-        {
-            return metricsBuilder
-                .AddHandlerBaseMetrics();
         }
     }
 }

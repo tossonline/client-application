@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Analytics.Domain.Abstractions;
 
 namespace Analytics.Domain.Entities
 {
     /// <summary>
     /// Represents a raw pixel event (visit, registration, deposit).
     /// </summary>
-    public class PixelEvent
+    public class PixelEvent : IPixelEvent
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string EventType { get; set; }

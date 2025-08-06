@@ -1,6 +1,5 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Affiliate.Platform.Extensions.Service.Configuration;
 using Analytics.Domain.Models.Configuration.BackgroundServices;
 using Analytics.Domain.Models.Configuration.Handler;
 using Analytics.Domain.Models.Configuration.Kafka;
@@ -9,7 +8,7 @@ using Analytics.Domain.Models.Configuration.SqlServer;
 
 namespace Analytics.Domain.Models.Configuration
 {
-    public sealed class AnalyticsConfiguration : ServiceConfiguration, IAnalyticsConfiguration
+    public sealed class AnalyticsConfiguration : IAnalyticsConfiguration
     {
         public AnalyticsConfiguration()
         {
@@ -21,11 +20,11 @@ namespace Analytics.Domain.Models.Configuration
             KafkaConsumers = new Dictionary<string, KafkaConsumerConfiguration>();
         }
 
-        public LoggerOptionsConfiguration LoggerOptions { get; init; }
-        public Dictionary<string, HandlerConfiguration> Handlers { get; init; }
-        public BackgroundServicesConfiguration BackgroundServices { get; init; }
-        public SqlServerConfiguration Persistence { get; init; }
-        public Dictionary<string, KafkaConsumerConfiguration> KafkaConsumers { get; init; }
-        public Dictionary<string, KafkaProducerConfiguration> KafkaProducers { get; init; }
+        public LoggerOptionsConfiguration LoggerOptions { get; set; }
+        public Dictionary<string, HandlerConfiguration> Handlers { get; set; }
+        public BackgroundServicesConfiguration BackgroundServices { get; set; }
+        public SqlServerConfiguration Persistence { get; set; }
+        public Dictionary<string, KafkaConsumerConfiguration> KafkaConsumers { get; set; }
+        public Dictionary<string, KafkaProducerConfiguration> KafkaProducers { get; set; }
     }
 }

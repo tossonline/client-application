@@ -1,11 +1,12 @@
 using System;
+using Analytics.Domain.Abstractions;
 
 namespace Analytics.Domain.Entities
 {
     /// <summary>
     /// Represents a player and their lifecycle events.
     /// </summary>
-    public class Player
+    public class Player : IPlayer
     {
         public string PlayerId { get; private set; }
         public DateTime FirstSeen { get; private set; }

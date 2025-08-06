@@ -1,11 +1,9 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Affiliate.Platform.Messaging.Abstractions.Messages;
-
 namespace Analytics.Application.Models.DeadLetter
 {
     [Serializable]
-    public sealed record DeadLetterCountMetric : Message
+    public sealed record DeadLetterCountMetric
     {
         public DeadLetterCountMetric()
         {
@@ -19,7 +17,6 @@ namespace Analytics.Application.Models.DeadLetter
         }
 
         public string Name { get; init; }
-
         public int RecordCount { get; init; }
     }
 }

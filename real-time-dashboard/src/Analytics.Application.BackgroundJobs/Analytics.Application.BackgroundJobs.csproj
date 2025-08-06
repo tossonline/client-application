@@ -8,7 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Affiliate.Platform.Extensions.BackgroundServices" Version="8.0.2"/>
+        <!-- Commented out custom package references -->
+        <!-- <PackageReference Include="Affiliate.Platform.Extensions.BackgroundServices" Version="2.1.6" /> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" /> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" /> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="2.1.1"/> -->
+        <PackageReference Include="MassTransit" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

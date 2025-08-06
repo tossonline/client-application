@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Entities;
-using Analytics.Domain.Repositories;
+using Analytics.Domain.Abstractions;
 
 namespace Analytics.Domain.Entities.PlayerAggregate
 {
@@ -28,11 +29,12 @@ namespace Analytics.Domain.Entities.PlayerAggregate
             
             if (player == null)
             {
-                player = Player.Create(playerId);
-                await _playerRepository.AddAsync(player);
+                var newPlayer = Player.Create(playerId);
+                await _playerRepository.AddAsync(newPlayer);
+                return newPlayer;
             }
 
-            return player;
+            return (Player)player; // Cast to concrete type
         }
 
         public async Task UpdatePlayerFromEventAsync(string playerId, string eventType)
@@ -100,4 +102,4 @@ namespace Analytics.Domain.Entities.PlayerAggregate
         public int TotalEvents { get; set; }
         public Dictionary<string, int> EventBreakdown { get; set; } = new();
     }
-} 
+}

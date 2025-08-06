@@ -7,4 +7,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <!-- No custom package references found, no changes needed -->
+    </ItemGroup>
+
 </Project>

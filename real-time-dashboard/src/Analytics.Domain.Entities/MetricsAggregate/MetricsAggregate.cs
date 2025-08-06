@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Entities;
-using Analytics.Domain.Repositories;
+using Analytics.Domain.Abstractions;
 using Analytics.Domain.Events;
 
 namespace Analytics.Domain.Entities.MetricsAggregate
@@ -90,7 +90,7 @@ namespace Analytics.Domain.Entities.MetricsAggregate
                 filteredSummaries = filteredSummaries.Where(s => s.BannerTag.Equals(bannerTag, StringComparison.OrdinalIgnoreCase));
             }
 
-            return filteredSummaries.ToList();
+            return filteredSummaries.Cast<EventSummary>().ToList();
         }
 
         public async Task<ConversionMetrics> CalculateConversionMetricsAsync(DateTime fromDate, DateTime toDate, string bannerTag = null)
@@ -165,4 +165,4 @@ namespace Analytics.Domain.Entities.MetricsAggregate
         public Dictionary<string, int> EventBreakdown { get; set; } = new();
         public Dictionary<string, int> BannerBreakdown { get; set; } = new();
     }
-} 
+}

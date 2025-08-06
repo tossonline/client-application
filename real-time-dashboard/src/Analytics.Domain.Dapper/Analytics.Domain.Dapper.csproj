@@ -11,7 +11,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" />
+        <!-- Commented out custom package references -->
+        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" /> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="2.1.1"/> -->
     </ItemGroup>
 
 </Project>

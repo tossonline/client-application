@@ -9,9 +9,13 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" />
-        <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/>
+        <!-- Commented out custom package reference -->
+        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" /> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/> -->
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
+        <!-- Add normal NuGet packages as alternatives below -->
+        <PackageReference Include="MassTransit" Version="8.0.0" />
+        <PackageReference Include="prometheus-net" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

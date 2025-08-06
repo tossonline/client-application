@@ -15,8 +15,6 @@
         
         <!-- Add public alternatives for testing and mocking -->
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Moq" Version="4.20.69" />
         <PackageReference Include="UnitOfWork.EntityFrameworkCore" Version="7.0.1" />
         
@@ -46,8 +44,6 @@
         <ProjectReference Include="..\..\src\Analytics.Infrastructure.Persistence\Analytics.Infrastructure.Persistence.csproj"/>
         <ProjectReference Include="..\..\src\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
         <ProjectReference Include="..\..\src\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Commands\Analytics.Domain.Commands.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Events\Analytics.Domain.Events.csproj"/>
     </ItemGroup>
 
 </Project>

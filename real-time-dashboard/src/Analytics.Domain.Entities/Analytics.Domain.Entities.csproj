@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Affiliate.Platform.Repository.Abstractions" Version="2.1.2"/>
+        <!-- Commented out custom package references -->
+        <!-- <PackageReference Include="Affiliate.Platform.Repository.Abstractions" Version="2.1.1"/> -->
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Analytics.Domain.Events\Analytics.Domain.Events.csproj" />
+        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

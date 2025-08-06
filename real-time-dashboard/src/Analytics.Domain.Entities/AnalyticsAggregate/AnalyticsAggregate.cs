@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Entities;
-using Analytics.Domain.Repositories;
+using Analytics.Domain.Abstractions;
+using Analytics.Domain.Events;
 
 namespace Analytics.Domain.Entities.AnalyticsAggregate
 {
@@ -218,4 +219,12 @@ namespace Analytics.Domain.Entities.AnalyticsAggregate
         public int Registrations { get; set; }
         public int Deposits { get; set; }
     }
-} 
+
+    public class DailyMetrics
+    {
+        public DateTime Date { get; set; }
+        public string BannerTag { get; set; }
+        public int TotalCount { get; set; }
+        public Dictionary<string, int> EventBreakdown { get; set; } = new();
+    }
+}

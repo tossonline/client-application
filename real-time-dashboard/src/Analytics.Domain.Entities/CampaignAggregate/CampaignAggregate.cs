@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Entities;
-using Analytics.Domain.Repositories;
+using Analytics.Domain.Abstractions;
 
 namespace Analytics.Domain.Entities.CampaignAggregate
 {
@@ -142,4 +142,4 @@ namespace Analytics.Domain.Entities.CampaignAggregate
         public double AverageDailyDeposits { get; set; }
         public string TrendDirection { get; set; }
     }
-} 
+}

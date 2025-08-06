@@ -18,4 +18,7 @@ namespace Analytics.Domain.Events
 
         public EventsAggregated()
         {
-            DailyCounts = new Dictionary<string, 
+            DailyCounts = new Dictionary<string, int>();
+        }
+    }
+}

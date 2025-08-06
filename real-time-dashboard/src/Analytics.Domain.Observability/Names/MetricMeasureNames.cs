@@ -1,6 +1,6 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Affiliate.Platform.Extensions.Observability;
+using System.Collections.Generic;
 
 namespace Analytics.Domain.Observability.Names
 {
@@ -22,5 +22,19 @@ namespace Analytics.Domain.Observability.Names
         public static ObservableMetric CounterNumberOfArchiveExecutions { get; }
         public static ObservableMetric CounterNumberOfArchiveCleanupExecutions { get; }
         public static ObservableMetric GaugeDeadLetterQueueItems { get; }
+    }
+
+    public class ObservableMetric
+    {
+        public string Name { get; }
+        public string Description { get; }
+        public List<string> Labels { get; }
+
+        public ObservableMetric(string name, string description, List<string> labels = null)
+        {
+            Name = name;
+            Description = description;
+            Labels = labels ?? new List<string>();
+        }
     }
 }

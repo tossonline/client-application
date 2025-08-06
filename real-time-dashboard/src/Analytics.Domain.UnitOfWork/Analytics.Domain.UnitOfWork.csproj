@@ -8,7 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Affiliate.Platform.UnitOfWork.Abstractions" Version="2.1.1"/>
+        <!-- Commented out custom package references -->
+        <!-- <PackageReference Include="Affiliate.Platform.UnitOfWork.Abstractions" Version="2.1.1"/> -->
+        <!-- <PackageReference Include="Affiliate.Platform.Repository.Abstractions" Version="2.1.1"/> -->
     </ItemGroup>
 
     <ItemGroup>

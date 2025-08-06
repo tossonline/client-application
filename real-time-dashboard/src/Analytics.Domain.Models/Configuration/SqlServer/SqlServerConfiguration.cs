@@ -1,7 +1,5 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Microsoft.Data.SqlClient;
-
 namespace Analytics.Domain.Models.Configuration.SqlServer
 {
     [Serializable]
@@ -18,26 +16,12 @@ namespace Analytics.Domain.Models.Configuration.SqlServer
         }
 
         public string Server { get; set; }
-
         public string Database { get; set; }
-
         public string Username { get; set; }
-
         public string Password { get; set; }
-
         public bool Encrypt { get; set; }
-
         public bool AllowMultipleActiveResultSets { get; set; }
 
-        public string ConnectionString => new SqlConnectionStringBuilder
-        {
-            DataSource = Server,
-            InitialCatalog = Database,
-            UserID = Username,
-            Password = Password,
-            Encrypt = Encrypt,
-            MultipleActiveResultSets = AllowMultipleActiveResultSets,
-            ConnectTimeout = 60
-        }.ConnectionString;
+        public string ConnectionString => $"Server={Server};Database={Database};User Id={Username};Password={Password};Encrypt={Encrypt};MultipleActiveResultSets={AllowMultipleActiveResultSets};Connect Timeout=60";
     }
 }

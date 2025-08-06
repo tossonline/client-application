@@ -59,4 +59,8 @@ namespace Analytics.Tests.Domain.Events
             var @event = new EventsAggregated();
 
             // Assert
-            Assert.That(@event.AggregatedAt, Is.GreaterThanOrEqualTo(beforeCreation)) 
+            Assert.That(@event.AggregatedAt, Is.GreaterThanOrEqualTo(beforeCreation));
+            Assert.That(@event.AggregatedAt, Is.LessThanOrEqualTo(DateTime.UtcNow));
+        }
+    }
+}

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Analytics.Domain.Entities;
+using Analytics.Domain.Abstractions;
 using Analytics.Domain.Events;
-using Analytics.Domain.Repositories;
 
 namespace Analytics.Domain.Entities.PixelEventAggregate
 {
@@ -120,4 +123,4 @@ namespace Analytics.Domain.Entities.PixelEventAggregate
             _domainEvents.Clear();
         }
     }
-} 
+}
