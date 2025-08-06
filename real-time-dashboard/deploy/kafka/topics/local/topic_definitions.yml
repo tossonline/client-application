@@ -1,0 +1,12 @@
+apiVersion: 1
+spec:
+  topics:
+    - name: EVT_DOSCPT_IGBAFFILIATES_DEV_AAP_EXT_<CONTEXT-NAME>_<SERVICE-NAME>_<EVENT-NAME>
+      partitions: 10
+      replication_factor: 5
+      configs:
+        cleanup.policy: "delete"
+        compression.type: "producer"
+        min.insync.replicas: "2"
+        retention.ms: "259200000" #3 day retention
+        segment.ms: "259200000"

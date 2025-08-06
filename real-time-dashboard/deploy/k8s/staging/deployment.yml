@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $DEPLOY_NAME
+  namespace: $K8S_NAMESPACE
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: $DEPLOY_NAME
+  template:
+    metadata:
+      labels:
+        app: $DEPLOY_NAME
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - $DEPLOY_NAME
+                topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: $DEPLOY_NAME
+          image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-affiliate-analytics:$IMAGE_TAG
+          resources:
+            requests:
+              memory: 50M
+              cpu: 100m
+            limits:
+              memory: 250M
+              cpu: 250m
+          securityContext:
+            runAsUser: 1010
+            allowPrivilegeEscalation: false
+            privileged: false
+          envFrom:
+            - configMapRef:
+                name: $CONFIG_NAME
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /api/ping
+              port: http
+            initialDelaySeconds: 60
+            failureThreshold: 3
+            periodSeconds: 20
+          startupProbe:
+            httpGet:
+              path: /api/ping
+              port: http
+            initialDelaySeconds: 60
+            failureThreshold: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /do/health/check
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/bash
+                  - -c
+                  - sleep 30 && nginx -s quit; while killall -0 nginx; do sleep 1; done

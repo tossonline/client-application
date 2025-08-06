@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>default</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
+    </ItemGroup>
+
+
+</Project>

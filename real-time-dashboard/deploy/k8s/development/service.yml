@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: $DEPLOY_NAME
+  namespace: $K8S_NAMESPACE
+  labels:
+    app: $DEPLOY_NAME
+spec:
+  selector:
+    app: $DEPLOY_NAME
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080

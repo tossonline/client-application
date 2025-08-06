@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" />
+        <PackageReference Include="Dapper" Version="2.1.28" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Analytics.Domain.Dapper\Analytics.Domain.Dapper.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Observability\Analytics.Domain.Observability.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Analytics.Domain.Models\Analytics.Domain.Models.csproj"/>
+    </ItemGroup>
+
+</Project>

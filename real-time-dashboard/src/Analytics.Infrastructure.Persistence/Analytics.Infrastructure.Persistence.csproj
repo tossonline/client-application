@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>default</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Affiliate.Platform.Extensions.Repository.EntityFramework" Version="8.0.3"/>
+        <PackageReference Include="Affiliate.Platform.UnitOfWork.Abstractions" Version="2.1.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Analytics.Domain.Models\Analytics.Domain.Models.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Observability\Analytics.Domain.Observability.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Repositories\Analytics.Domain.Repositories.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.UnitOfWork\Analytics.Domain.UnitOfWork.csproj"/>
+    </ItemGroup>
+
+</Project>

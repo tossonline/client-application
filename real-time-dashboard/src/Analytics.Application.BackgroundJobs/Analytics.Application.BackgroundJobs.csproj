@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>default</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Affiliate.Platform.Extensions.BackgroundServices" Version="8.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Analytics.Application.Models\Analytics.Application.Models.csproj" />
+        <ProjectReference Include="..\Analytics.Domain.Dapper\Analytics.Domain.Dapper.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Models\Analytics.Domain.Models.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Observability\Analytics.Domain.Observability.csproj"/>
+    </ItemGroup>
+
+</Project>

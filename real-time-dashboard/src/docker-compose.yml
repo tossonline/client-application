@@ -1,0 +1,281 @@
+version: '2'
+
+services:
+  #=============================================================
+  # Prometheus
+  # -----------------------
+  # Url: http://localhost:9090/
+  #=============================================================
+  prometheus:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../deploy/prometheus/local:/etc/prometheus
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+  #=============================================================
+  # Prometheus End
+  #=============================================================
+  
+  #=============================================================
+  # Grafana
+  # -----------------------
+  # Url: http://localhost:3000/
+  #=============================================================
+  grafana:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/grafana/grafana:9.1.5
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../deploy/grafana/local:/etc/grafana
+  #=============================================================
+  # Grafana End
+  #=============================================================
+  
+  #=============================================================
+  # Jeager
+  # -----------------------
+  # Url: http://localhost:16686/
+  #=============================================================
+  jaeger:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/jaegertracing/all-in-one:latest
+    container_name: jaegerall
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 16685:16685
+      - 14268:14268
+      - 9411:9411
+      - 4317:4317
+      - 4318:4318
+      - 14250:14250
+      - 14269:14269
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+  #=============================================================
+  # Jeager End
+  #=============================================================
+
+  #=============================================================
+  # SQL Server
+  # -----------------------
+  # Server: 127.0.0.1,1433
+  # Username: sa
+  # Password: P@ssw0rd
+  #=============================================================
+  sql-server-db:
+    container_name: sql-server-db
+    image: artifactory.tools1-az1.digi.is/epea-docker-full/mssql/server:2019-latest
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "P@ssw0rd"
+      ACCEPT_EULA: "Y"
+      MSSQL_AGENT_ENABLED: "True"
+  #=============================================================
+  # SQL Server End
+  #=============================================================
+  
+  #=============================================================
+  # SonarQube
+  # -----------------------
+  # Url: http://localhost:9000/
+  #=============================================================  
+  sonarqube:
+    image: artifactory.tools1-az1.digi.is/epea-docker-full/sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+  
+  #=============================================================
+  # Kafka
+  # HQ Url: http://localhost:8087/ui/docker-kafka-server/topic
+  # Schema Registry Url: http://schema-registry:8081
+  #=============================================================
+  zookeeper:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/confluentinc/cp-kafka:latest
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+
+  akhq:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/tchiotludo/akhq:latest
+    hostname: akhq
+    container_name: akhq
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - "8087:8080"
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "broker:29092"
+              schema-registry:
+                url: "http://schema-registry:8081"  
+
+  schema-registry:
+    image: artifactory.tools1-az1.digi.is/epea-docker-pull/confluentinc/cp-schema-registry:latest
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+  #=============================================================
+  # Kafka End
+  #=============================================================
+
+  #=============================================================
+  # Create Databases
+  #=============================================================
+  dbAffiliate_Analytics_Local:
+    container_name: dbAffiliate_Analytics
+    image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-sql-migration:1.0.10
+    depends_on:
+      - sql-server-db
+    volumes:
+      - ./dbAffiliate_Analytics:/db
+    working_dir: /db
+    command: bash -c "sleep 5 &&
+      for i in 1 2 3 4 5;
+      do
+      grate --connstring='Server=sql-server-db;Encrypt=False;User Id=sa;Password=P@ssw0rd;Database=dbAffiliate_Analytics'
+      --files=/db
+      --schema=Grate
+      --env=LOCAL
+      --version=1.0
+      --transaction=true
+      --silent
+      --warnononetimescriptchanges=true
+      --warnandignoreononetimescriptchanges=true
+      --commandtimeout=60
+      --drop && break ||
+      echo "retrying.." &&
+      sleep 15;
+      done"
+  
+  dbAffiliate_AnalyticsArchive_Local:
+    container_name: dbAffiliate_AnalyticsArchive
+    image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-sql-migration:1.0.10
+    depends_on:
+      - sql-server-db
+    volumes:
+      - ./dbAffiliate_AnalyticsArchive:/db
+    working_dir: /db
+    command: bash -c "sleep 5 &&
+      for i in 1 2 3 4 5;
+      do
+      grate --connstring='Server=sql-server-db;Encrypt=False;User Id=sa;Password=P@ssw0rd;Database=dbAffiliate_AnalyticsArchive'
+      --files=/db
+      --schema=Grate
+      --env=LOCAL
+      --version=1.0
+      --transaction=true
+      --silent
+      --warnononetimescriptchanges=true
+      --warnandignoreononetimescriptchanges=true
+      --commandtimeout=60
+      --drop && break ||
+      echo "retrying.." &&
+      sleep 15;
+      done"
+  #=============================================================
+  # Create Databases End
+  #=============================================================
+
+  #=============================================================
+  # Deploy Kafka Topics & Schemas
+  #=============================================================
+  # kafka-management:
+  #   image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-kafka-management:1.0.18
+  #   container_name: kafka-management
+  #   depends_on:
+  #     - zookeeper
+  #     - broker
+  #   volumes:
+  #     - ../deploy/kafka/topics:/kafka/topics
+  #   command: --bootstrap-servers broker:29092 topics apply --files /kafka/topics/local/topic_definitions.yml --yes
+
+  # kafka-schemas:
+  #   image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-kafka-schemas:1.0.7
+  #   container_name: kafka-schemas
+  #   depends_on:
+  #     - zookeeper
+  #     - broker
+  #     - schema-registry
+  #   volumes:
+  #     - ../deploy/kafka/schemas:/deploy/kafka/schemas
+  #   command: bash -c "sleep 20 &&
+  #     for i in 1 2 3 4 5;
+  #     do
+  #     kafka-schemas --url http://schema-registry:8081 apply --files /deploy/kafka/schemas/local/schema_definitions.yml && break ||
+  #     echo "retrying.." &&
+  #     sleep 15;
+  #     done"
+
+  #=============================================================
+  # Deploy Kafka Topics & Schemas End
+  #=============================================================
+  
+  #=============================================================
+  # Deploy Grafana Dashboard
+  #=============================================================
+  grafana_tools:
+    image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-grafana-tools:1.0.9
+    entrypoint: [ "/bin/sh","-c" ]
+    container_name: grafana_tools
+    depends_on:
+      - grafana
+    volumes:
+      - ../deploy/grafana:/deploy/grafana
+    command:
+      - |
+        sleep 20
+        
+        /tools/Grafana.Tools.Console "/deploy/grafana" "local" "Basic" "YWRtaW46YWRtaW4=" "IGaming Affiliates" "igaming_affiliates_folder"
+  #=============================================================
+  # Deploy Grafana Dashboard
+  #=============================================================

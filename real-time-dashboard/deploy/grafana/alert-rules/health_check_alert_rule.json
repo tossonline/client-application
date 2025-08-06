@@ -1,0 +1,177 @@
+{
+  "uid": "aap_affiliate_analytics_health_check_alert_rule",
+  "orgID": 1,
+  "folderUID": "#FolderUid#",
+  "ruleGroup": "#RuleGroup#",
+  "title": "[Affiliate.Analytics] - Health Check Alert Rule",
+  "condition": "C",
+  "data": [
+    {
+      "refId": "A",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 300,
+        "to": 0
+      },
+      "datasourceUid": "#DatasourceUid#",
+      "model": {
+        "editorMode": "builder",
+        "expr": "aspnetcore_healthcheck_status{container=\"#ContainerName#\", name=\"kafka\"}",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "A"
+      }
+    },
+    {
+      "refId": "B",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 300,
+        "to": 0
+      },
+      "datasourceUid": "#DatasourceUid#",
+      "model": {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "#DatasourceUid#"
+        },
+        "editorMode": "builder",
+        "expr": "aspnetcore_healthcheck_status{container=\"#ContainerName#\", name=\"Persistence\"}",
+        "hide": false,
+        "intervalMs": 1000,
+        "legendFormat": "__auto",
+        "maxDataPoints": 43200,
+        "range": true,
+        "refId": "B"
+      }
+    },
+    {
+      "refId": "C",
+      "queryType": "",
+      "relativeTimeRange": {
+        "from": 0,
+        "to": 0
+      },
+      "datasourceUid": "-100",
+      "model": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1,
+                0
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                1,
+                0
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "no_value"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "A"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                0,
+                0
+              ],
+              "type": "no_value"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "B"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "datasource": {
+          "name": "Expression",
+          "type": "__expr__",
+          "uid": "__expr__"
+        },
+        "expression": "B",
+        "hide": false,
+        "intervalMs": 1000,
+        "maxDataPoints": 43200,
+        "refId": "C",
+        "type": "classic_conditions"
+      }
+    }
+  ],
+  "updated": "2023-08-17T08:14:52Z",
+  "noDataState": "Alerting",
+  "execErrState": "Alerting",
+  "for": "5m",
+  "annotations": {
+    "__dashboardUid__": "#DashboardUid#",
+    "__panelId__": "34",
+    "description": "[Affiliate.Analytics] - The health checks are failing for the service. Please look at it urgently.",
+    "summary": "[Affiliate.Analytics] - The health checks are failing"
+  },
+  "labels": {
+    "service": "#Service#"
+  }
+}

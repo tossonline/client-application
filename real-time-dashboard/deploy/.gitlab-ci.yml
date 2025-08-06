@@ -1,0 +1,41 @@
+include:
+  - project: igaming-brands/affiliates/affiliate-platform/templates/build-templates
+    ref: master
+    file: src/full_pipeline/deploy_container_csharp_service.yml
+
+variables:
+  DOCKER_HOST: tcp://172.24.67.199:2375
+
+  # Project variables
+  BUILD_PROJECT_LOCATION: src/Analytics.Infrastructure.Service
+  ENABLE_CODE_ANALYSIS: "true"
+  ANALYSIS_PROJECT_NAME: Affiliate.Platform.Affiliate.Analytics
+  ENABLE_UNIT_TESTS: "true"
+  UNITTEST_PROJECT_LOCATION: test/Analytics.Tests
+
+  # Kafka variables
+  ENABLE_TOPIC_DEPLOY: "true"
+  ENABLE_SCHEMA_DEPLOY: "true"
+
+  # Database Variables 
+  ENABLE_DATABASE_DEPLOY: "true"
+  DATABASE_NAME: "dbAffiliate_Analytics"
+  DATABASE_SCRIPT_LOCATION: "src/dbAffiliate_Analytics"
+  
+  ENABLE_ARCHIVE_DATABASE_DEPLOY: "true"
+  ARCHIVE_DATABASE_NAME: "dbAffiliate_AnalyticsArchive"
+  ARCHIVE_DATABASE_SCRIPT_LOCATION: "src/dbAffiliate_AnalyticsArchive"
+
+  # Kubernetes variables
+  CONTAINER_DEPLOY_NAME: affiliate-platform-affiliate-analytics
+  CONTAINER_K8S_NAMESPACE: affiliate-platform-affiliate
+  CONTAINER_CONFIG_NAME: config-affiliate-platform-affiliate-analytics
+
+stages:
+  - Catalogue
+  - Validate
+  - Build
+  - Test
+  - Containerize
+  - Deploy
+  - Release

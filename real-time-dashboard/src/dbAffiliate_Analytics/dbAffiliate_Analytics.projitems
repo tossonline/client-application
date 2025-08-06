@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+        <HasSharedItems>true</HasSharedItems>
+        <SharedGUID>50950326-BBA6-41D1-B01F-3E0CD31BD07D</SharedGUID>
+    </PropertyGroup>
+    <PropertyGroup Label="Configuration">
+        <Import_RootNamespace>dbAffiliate_Analytics</Import_RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)sprocs\usp_DeadLetterCountGet.sql" />
+        <Content Include="$(MSBuildThisFileDirectory)sprocs\usp_AnalyticsArchive.sql"/>
+        <Content Include="$(MSBuildThisFileDirectory)up\0001-Create-IngressSchema.ENV.LOCAL.sql"/>
+        <Content Include="$(MSBuildThisFileDirectory)up\0002-Create-EgressSchema.ENV.LOCAL.sql"/>
+    <Content Include="$(MSBuildThisFileDirectory)up\0003-Create-GrafanaSchema.ENV.LOCAL.sql" />
+    <Content Include="$(MSBuildThisFileDirectory)up\0004-Create-HangfireTables.sql" />
+    </ItemGroup>
+</Project>

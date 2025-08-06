@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: $DEPLOY_NAME
+  namespace: $K8S_NAMESPACE
+spec:
+  gateways:
+    - $GATEWAY
+  hosts:
+    - $CI_ENVIRONMENT_HOST
+  http:
+    - route:
+        - destination:
+            port:
+              number: 80
+            host: $DEPLOY_NAME
+      retries:
+        attempts: 3
+        perTryTimeout: 15s

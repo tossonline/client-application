@@ -1,0 +1,133 @@
+manifestVersion: v2
+reference: 7A2B1C3D-4E5F-6789-ABCD-1234567890EF
+product: AAP8B2B1-9F1F-4B0F-8F64-AE3489A014DE
+tags:
+  - analytics
+  - real-time
+
+application:
+  organisation: Spin
+  name: Real-Time Pixel Analytics Platform
+  description: >
+    Platform for real-time tracking, aggregation, and visualization of web events (visits, registrations, deposits) for iGaming brands and affiliates.
+  stakeholders:
+    - name: iGaming Brand Affiliates
+      reference: E7A1C2DC-4F84-4ECE-97C4-2540A794E396
+      as: Application Organization Developer
+    - name: Red Interactive
+      as: Application Organization Owner
+    # Add more stakeholders as needed
+  functions:
+    - Ingest Pixel Events
+    - Aggregate and Store Events
+    - Expose Metrics API
+    - Visualize Metrics Dashboard
+    # Add more functions as needed
+  health:
+    observability: <score>
+    performance: <score>
+    technicalDebt: <score>
+    risk: <score>
+    security: <score>
+    resilience: <score>
+
+development:
+  type: Web API
+  languages:
+    - name: C#
+      reference: 0FE9B49C-0EDF-4C46-A711-F70A0AA797B3
+  frameworks:
+    - name: .NET
+      reference: 6E74C6A2-B390-48AC-B050-4048D3AA5F55
+  links:
+    repository: <Link>
+    jira: <Link>
+    grafana: <Link>
+    kibana: <Link>
+    sonarqube: <Link>
+
+deployment:
+  deliveryModel:
+    - On Premise
+  infrastructure:
+    #Development
+    - name: K8S - Orange
+      type: Kubernetes Cluster
+      reference: 0E2EDA14-E77E-4ED1-A26D-C40F421A9048
+      environment: DEV
+    - name: WHLDEVLSTN01
+      type: SQL Server
+      reference: B8F728F8-B357-42CA-A1F7-DCF4A63B593C
+      environment: DEV
+    - name: CPTKDEVDISCO
+      type: Kafka Cluster
+      reference: B8F728F8-B357-42CA-A1F7-DCF4A63B593C
+      environment: DEV
+    - name: <Infrastructure Name>
+      type: <Type>
+      reference: <Instance Reference>
+      environment: <Environment>
+    #Stage
+    - name: K8S - Blue
+      type: Kubernetes Cluster
+      reference: A099B9DC-F91A-4519-A7AB-5E8288B9133E
+      environment: STAGE
+    - name: WHLUATDB01
+      type: SQL Server
+      databases:
+        - <Database name>
+      reference: CE599B4D-8D09-41D2-A8B1-B01EA1DCE1DA
+      environment: STAGE
+    - name: WHLKDISCO
+      type: Kafka Cluster
+      topics:
+        - <Topic names>
+      reference: 4BB0913C-C8C2-4A86-891B-101D93DC5AF1
+      environment: STAGE
+    - name: <Infrastructure Name>
+      type: <Type>
+      reference: <Instance Reference>
+      environment: <Environment>
+    #Production
+    - name: K8S - Green AZ1
+      type: Kubernetes Cluster
+      reference: C31C313D-6B5B-46AD-BFA2-6DA02CED80D8
+      environment: PROD
+    - name: WHLAOLSTN06
+      type: SQL Server
+      databases:
+        - <Database name>
+      reference: BF55FD4D-FD6C-40F8-8880-380957E2E2FF
+      environment: PROD
+    - name: WHLKPARDISCO
+      type: Kafka Cluster
+      topics:
+        - <Topic names>
+      reference: 4BB0913C-C8C2-4A86-891B-101D93DC5AF1
+      environment: PROD
+    - name: <Infrastructure Name>
+      type: <Type>
+      reference: <Instance Reference>
+      environment: <Environment>
+
+dependencies:
+  - name: Logging Service
+    reference: ACAFD2CF-685F-4635-9207-28E4189D9E5A
+    data:
+      - type: Logging Data
+        description: >
+          Logging service that consumes all the relevant logs of the system that is then displayed in kibana
+        frequency: Ad-Hoc
+        method: Kafka Topic
+        direction: out
+        pii: false
+  - name: <Dependent Service>
+    reference: <Dependent Service Reference>
+    data:
+      - type: <Date Type>
+        description: >
+          <Data Description>
+        frequency: <Frequency>
+        method: <Method>
+        pii: <true/false>
+        direction: <Direction>

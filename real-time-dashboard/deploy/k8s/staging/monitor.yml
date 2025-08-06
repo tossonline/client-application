@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: prometheus-operator
+  name: $DEPLOY_NAME
+  namespace: $K8S_NAMESPACE
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: http
+  namespaceSelector:
+    matchNames:
+      - $K8S_NAMESPACE
+  selector:
+    matchLabels:
+      app: $DEPLOY_NAME

@@ -1,0 +1,10 @@
+{
+  "uid": "aap_affiliate_analytics_contact_point",
+  "name": "Affiliate Platform - Affiliate - Analytics - Alerts Teams Channel",
+  "type": "teams",
+  "settings": {
+    "url": "https://digioutsource.webhook.office.com/webhookb2/3765e71d-8a90-4114-8c1d-b355df9fac3f@504d37a0-e862-4606-b42e-f5e2f37b1772/IncomingWebhook/960a5b6bf2d04e578e25f1b29e641526/305467d3-57df-49d7-945d-1cf99a171bbf"
+  },
+  "disableResolveMessage": false,
+  "overwrite": true
+}

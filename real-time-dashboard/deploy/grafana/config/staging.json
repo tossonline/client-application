@@ -1,0 +1,11 @@
+{
+  "GrafanaDomain": "https://grafana.beta-internal.ne.digi.is",
+  "Title": "Agnostic Affiliate Program | Affiliate Analytics",
+  "DashboardUid": "affiliate_analytics_dashboard",
+  "FolderUid": "DX-YIknSk",
+  "DatasourceUid": "prometheus",
+  "ContainerName": "affiliate-platform-affiliate-analytics",
+  "Service": "affiliate-platform-affiliate-analytics",
+  "RuleGroup": "Affiliate Platform Affiliate Analytics",
+  "LoggingTopic": "EVT_DOSCPT_IGBAFFILIATES_DEV_AAP_EXT_OBSERVABILITY_LOGGING_MESSAGE-LOGGED"
+}
