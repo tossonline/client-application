@@ -4,13 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Entities;
 using Analytics.Domain.Repositories;
+using Analytics.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Analytics.Infrastructure.Persistence.Repositories
 {
-    /// <summary>
-    /// Repository implementation for EventSummary entity
-    /// </summary>
     public class EventSummaryRepository : IEventSummaryRepository
     {
         private readonly AnalyticsContext _context;
@@ -78,4 +76,3 @@ namespace Analytics.Infrastructure.Persistence.Repositories
         }
     }
 }
-

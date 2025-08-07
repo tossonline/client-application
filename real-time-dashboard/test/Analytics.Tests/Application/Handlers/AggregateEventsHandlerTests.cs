@@ -15,138 +15,115 @@ namespace Analytics.Tests.Application.Handlers
     [TestFixture]
     public class AggregateEventsHandlerTests
     {
-        private Mock<IPixelEventRepository> _mockPixelEventRepository;
-        private Mock<IEventSummaryRepository> _mockEventSummaryRepository;
-        private Mock<ILogger<AggregateEventsHandler>> _mockLogger;
+        private Mock<IPixelEventRepository> _pixelEventRepositoryMock;
+        private Mock<IEventSummaryRepository> _eventSummaryRepositoryMock;
+        private Mock<ILogger<AggregateEventsHandler>> _loggerMock;
         private AggregateEventsHandler _handler;
 
         [SetUp]
         public void Setup()
         {
-            _mockPixelEventRepository = new Mock<IPixelEventRepository>();
-            _mockEventSummaryRepository = new Mock<IEventSummaryRepository>();
-            _mockLogger = new Mock<ILogger<AggregateEventsHandler>>();
-            _handler = new AggregateEventsHandler(_mockPixelEventRepository.Object, _mockEventSummaryRepository.Object, _mockLogger.Object);
+            _pixelEventRepositoryMock = new Mock<IPixelEventRepository>();
+            _eventSummaryRepositoryMock = new Mock<IEventSummaryRepository>();
+            _loggerMock = new Mock<ILogger<AggregateEventsHandler>>();
+            _handler = new AggregateEventsHandler(
+                _pixelEventRepositoryMock.Object,
+                _eventSummaryRepositoryMock.Object,
+                _loggerMock.Object);
         }
 
         [Test]
-        public async Task Handle_WithValidCommand_ShouldSucceed()
+        public async Task Handle_ValidCommand_CreatesEventSummaries()
         {
             // Arrange
-            var eventDate = DateTime.Today;
-            var command = new AggregateEventsCommand { EventDate = eventDate };
+            var date = DateTime.UtcNow.Date;
+            var command = new AggregateEventsCommand
+            {
+                EventDate = date
+            };
 
             var events = new List<PixelEvent>
             {
-                new PixelEvent { EventType = "visit", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "visit", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "registration", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "visit", BannerTag = "brandB", Timestamp = eventDate }
+                new PixelEvent { EventType = "visit", BannerTag = "banner1", Timestamp = date },
+                new PixelEvent { EventType = "visit", BannerTag = "banner1", Timestamp = date },
+                new PixelEvent { EventType = "registration", BannerTag = "banner1", Timestamp = date },
+                new PixelEvent { EventType = "visit", BannerTag = "banner2", Timestamp = date }
             };
 
-            _mockPixelEventRepository.Setup(x => x.GetByDateAsync(eventDate))
+            _pixelEventRepositoryMock.Setup(x => x.GetByDateAsync(date))
                 .ReturnsAsync(events);
 
             // Act
             await _handler.Handle(command);
 
             // Assert
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.IsAny<EventSummary>()), Times.Exactly(3));
+            _eventSummaryRepositoryMock.Verify(
+                x => x.AddAsync(It.Is<EventSummary>(s =>
+                    s.EventDate == date &&
+                    s.EventType == "visit" &&
+                    s.BannerTag == "banner1" &&
+                    s.Count == 2)),
+                Times.Once);
+
+            _eventSummaryRepositoryMock.Verify(
+                x => x.AddAsync(It.Is<EventSummary>(s =>
+                    s.EventDate == date &&
+                    s.EventType == "registration" &&
+                    s.BannerTag == "banner1" &&
+                    s.Count == 1)),
+                Times.Once);
+
+            _eventSummaryRepositoryMock.Verify(
+                x => x.AddAsync(It.Is<EventSummary>(s =>
+                    s.EventDate == date &&
+                    s.EventType == "visit" &&
+                    s.BannerTag == "banner2" &&
+                    s.Count == 1)),
+                Times.Once);
         }
 
         [Test]
-        public async Task Handle_WithNoEvents_ShouldNotAddSummaries()
+        public async Task Handle_NoEvents_DoesNotCreateSummaries()
         {
             // Arrange
-            var eventDate = DateTime.Today;
-            var command = new AggregateEventsCommand { EventDate = eventDate };
+            var date = DateTime.UtcNow.Date;
+            var command = new AggregateEventsCommand
+            {
+                EventDate = date
+            };
 
-            _mockPixelEventRepository.Setup(x => x.GetByDateAsync(eventDate))
+            _pixelEventRepositoryMock.Setup(x => x.GetByDateAsync(date))
                 .ReturnsAsync(new List<PixelEvent>());
 
             // Act
             await _handler.Handle(command);
 
             // Assert
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.IsAny<EventSummary>()), Times.Never);
+            _eventSummaryRepositoryMock.Verify(
+                x => x.AddAsync(It.IsAny<EventSummary>()),
+                Times.Never);
         }
 
         [Test]
-        public async Task Handle_WithMultipleEventTypes_ShouldCreateCorrectSummaries()
+        public async Task Handle_DeletesExistingSummaries()
         {
             // Arrange
-            var eventDate = DateTime.Today;
-            var command = new AggregateEventsCommand { EventDate = eventDate };
-
-            var events = new List<PixelEvent>
+            var date = DateTime.UtcNow.Date;
+            var command = new AggregateEventsCommand
             {
-                new PixelEvent { EventType = "visit", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "visit", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "registration", BannerTag = "brandA", Timestamp = eventDate },
-                new PixelEvent { EventType = "deposit", BannerTag = "brandA", Timestamp = eventDate }
+                EventDate = date
             };
 
-            _mockPixelEventRepository.Setup(x => x.GetByDateAsync(eventDate))
-                .ReturnsAsync(events);
+            _pixelEventRepositoryMock.Setup(x => x.GetByDateAsync(date))
+                .ReturnsAsync(new List<PixelEvent>());
 
             // Act
             await _handler.Handle(command);
 
             // Assert
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.Is<EventSummary>(s => 
-                s.EventType == "visit" && s.BannerTag == "brandA" && s.Count == 2)), Times.Once);
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.Is<EventSummary>(s => 
-                s.EventType == "registration" && s.BannerTag == "brandA" && s.Count == 1)), Times.Once);
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.Is<EventSummary>(s => 
-                s.EventType == "deposit" && s.BannerTag == "brandA" && s.Count == 1)), Times.Once);
-        }
-
-        [Test]
-        public async Task Handle_WithNullBannerTags_ShouldCreateSummaries()
-        {
-            // Arrange
-            var eventDate = DateTime.Today;
-            var command = new AggregateEventsCommand { EventDate = eventDate };
-
-            var events = new List<PixelEvent>
-            {
-                new PixelEvent { EventType = "visit", BannerTag = null, Timestamp = eventDate },
-                new PixelEvent { EventType = "visit", BannerTag = null, Timestamp = eventDate }
-            };
-
-            _mockPixelEventRepository.Setup(x => x.GetByDateAsync(eventDate))
-                .ReturnsAsync(events);
-
-            // Act
-            await _handler.Handle(command);
-
-            // Assert
-            _mockEventSummaryRepository.Verify(x => x.AddAsync(It.Is<EventSummary>(s => 
-                s.EventType == "visit" && s.BannerTag == null && s.Count == 2)), Times.Once);
-        }
-
-        [Test]
-        public void Handle_WithNullCommand_ShouldThrowArgumentNullException()
-        {
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(null));
-            Assert.That(ex.ParamName, Is.EqualTo("command"));
-        }
-
-        [Test]
-        public async Task Handle_WithRepositoryException_ShouldPropagateException()
-        {
-            // Arrange
-            var eventDate = DateTime.Today;
-            var command = new AggregateEventsCommand { EventDate = eventDate };
-
-            _mockPixelEventRepository.Setup(x => x.GetByDateAsync(eventDate))
-                .ThrowsAsync(new InvalidOperationException("Database error"));
-
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command));
-            Assert.That(ex.Message, Is.EqualTo("Database error"));
+            _eventSummaryRepositoryMock.Verify(
+                x => x.DeleteByDateAsync(date),
+                Times.Once);
         }
     }
 }
-

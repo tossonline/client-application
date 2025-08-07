@@ -1,35 +1,26 @@
-// Copyright (c) DigiOutsource. All rights reserved.
-
-using Affiliate.Platform.UnitOfWork.Abstractions;
+using Analytics.Domain.Repositories;
+using Analytics.Infrastructure.Persistence.Contexts;
+using Analytics.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Analytics.Domain.Models.Configuration.SqlServer;
-using Analytics.Domain.UnitOfWork;
-using Analytics.Infrastructure.Persistence.Contexts;
-using Analytics.Infrastructure.Persistence.UnitOfWork;
 
 namespace Analytics.Infrastructure.Persistence.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString)
         {
-            return services
-                .AddSingleton<IUnitOfWorkFactory<IAnalyticsUnitOfWork>, AnalyticsUnitOfWorkFactory>();
-        }
+            // Add DbContext
+            services.AddDbContext<AnalyticsContext>(options =>
+                options.UseNpgsql(connectionString));
 
-        public static IServiceCollection AddDatabase(this IServiceCollection services, SqlServerConfiguration sqlServerConfiguration)
-        {
-            return services
-                .AddMemoryCache()
-                .AddDbContextFactory<AnalyticsContext>(options =>
-                    options
-                        .UseSqlServer(sqlServerConfiguration.ConnectionString, dbOptions => { dbOptions.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds); }));
-        }
+            // Add repositories
+            services.AddScoped<IPixelEventRepository, PixelEventRepository>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+            services.AddScoped<IEventSummaryRepository, EventSummaryRepository>();
+            services.AddScoped<IDashboardsRepository, DashboardsRepository>();
 
-        public static IServiceCollection AddMockDatabase(this IServiceCollection services, string databaseName)
-        {
-            return services.AddDbContextFactory<AnalyticsContext>(options => { options.UseInMemoryDatabase(databaseName); });
+            return services;
         }
     }
 }

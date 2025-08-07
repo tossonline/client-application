@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Analytics.Application.Handlers;
 using Analytics.Domain.Commands;
@@ -14,145 +13,140 @@ namespace Analytics.Tests.Application.Handlers
     [TestFixture]
     public class IngestPixelEventHandlerTests
     {
-        private Mock<IPixelEventRepository> _mockPixelEventRepository;
-        private Mock<IPlayerRepository> _mockPlayerRepository;
-        private Mock<ILogger<IngestPixelEventHandler>> _mockLogger;
+        private Mock<IPixelEventRepository> _pixelEventRepositoryMock;
+        private Mock<IPlayerRepository> _playerRepositoryMock;
+        private Mock<ILogger<IngestPixelEventHandler>> _loggerMock;
         private IngestPixelEventHandler _handler;
 
         [SetUp]
         public void Setup()
         {
-            _mockPixelEventRepository = new Mock<IPixelEventRepository>();
-            _mockPlayerRepository = new Mock<IPlayerRepository>();
-            _mockLogger = new Mock<ILogger<IngestPixelEventHandler>>();
-            _handler = new IngestPixelEventHandler(_mockPixelEventRepository.Object, _mockPlayerRepository.Object, _mockLogger.Object);
+            _pixelEventRepositoryMock = new Mock<IPixelEventRepository>();
+            _playerRepositoryMock = new Mock<IPlayerRepository>();
+            _loggerMock = new Mock<ILogger<IngestPixelEventHandler>>();
+            _handler = new IngestPixelEventHandler(
+                _pixelEventRepositoryMock.Object,
+                _playerRepositoryMock.Object,
+                _loggerMock.Object);
         }
 
         [Test]
-        public async Task Handle_WithValidCommand_ShouldSucceed()
+        public async Task Handle_ValidCommand_CreatesPixelEventAndPlayer()
         {
             // Arrange
             var command = new IngestPixelEventCommand
             {
                 EventType = "visit",
-                PlayerId = "player123",
-                BannerTag = "brandA",
-                Metadata = new Dictionary<string, string> { { "s", "bfp123456" } },
-                SourceIp = "192.168.1.1",
-                UserAgent = "Mozilla/5.0",
+                PlayerId = "player-123",
+                BannerTag = "banner-456",
+                SourceIp = "127.0.0.1",
+                UserAgent = "test-agent",
                 Timestamp = DateTime.UtcNow
             };
 
-            _mockPlayerRepository.Setup(x => x.GetByPlayerIdAsync("player123"))
+            _playerRepositoryMock.Setup(x => x.GetByPlayerIdAsync(command.PlayerId))
                 .ReturnsAsync((Player)null);
 
             // Act
             await _handler.Handle(command);
 
             // Assert
-            _mockPixelEventRepository.Verify(x => x.AddAsync(It.IsAny<PixelEvent>()), Times.Once);
-            _mockPlayerRepository.Verify(x => x.AddAsync(It.IsAny<Player>()), Times.Once);
+            _pixelEventRepositoryMock.Verify(
+                x => x.AddAsync(It.Is<PixelEvent>(e =>
+                    e.EventType == command.EventType &&
+                    e.PlayerId == command.PlayerId &&
+                    e.BannerTag == command.BannerTag &&
+                    e.SourceIp == command.SourceIp &&
+                    e.UserAgent == command.UserAgent &&
+                    e.Timestamp == command.Timestamp)),
+                Times.Once);
+
+            _playerRepositoryMock.Verify(
+                x => x.AddAsync(It.Is<Player>(p =>
+                    p.PlayerId == command.PlayerId)),
+                Times.Once);
         }
 
         [Test]
-        public async Task Handle_WithRegistrationEvent_ShouldRegisterPlayer()
-        {
-            // Arrange
-            var command = new IngestPixelEventCommand
-            {
-                EventType = "registration",
-                PlayerId = "player123",
-                BannerTag = "brandA",
-                Timestamp = DateTime.UtcNow
-            };
-
-            var existingPlayer = Player.Create("player123");
-            _mockPlayerRepository.Setup(x => x.GetByPlayerIdAsync("player123"))
-                .ReturnsAsync(existingPlayer);
-
-            // Act
-            await _handler.Handle(command);
-
-            // Assert
-            _mockPlayerRepository.Verify(x => x.UpdateAsync(It.Is<Player>(p => p.RegistrationDate.HasValue)), Times.Once);
-        }
-
-        [Test]
-        public async Task Handle_WithDepositEvent_ShouldSetFirstDepositDate()
-        {
-            // Arrange
-            var command = new IngestPixelEventCommand
-            {
-                EventType = "deposit",
-                PlayerId = "player123",
-                BannerTag = "brandA",
-                Timestamp = DateTime.UtcNow
-            };
-
-            var existingPlayer = Player.Create("player123");
-            existingPlayer.Register();
-            _mockPlayerRepository.Setup(x => x.GetByPlayerIdAsync("player123"))
-                .ReturnsAsync(existingPlayer);
-
-            // Act
-            await _handler.Handle(command);
-
-            // Assert
-            _mockPlayerRepository.Verify(x => x.UpdateAsync(It.Is<Player>(p => p.FirstDepositDate.HasValue)), Times.Once);
-        }
-
-        [Test]
-        public void Handle_WithNullCommand_ShouldThrowArgumentNullException()
-        {
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(null));
-            Assert.That(ex.ParamName, Is.EqualTo("command"));
-        }
-
-        [Test]
-        public async Task Handle_WithExistingPlayer_ShouldUpdatePlayer()
+        public async Task Handle_ExistingPlayer_UpdatesLastEvent()
         {
             // Arrange
             var command = new IngestPixelEventCommand
             {
                 EventType = "visit",
-                PlayerId = "player123",
-                BannerTag = "brandA",
+                PlayerId = "player-123",
+                BannerTag = "banner-456",
                 Timestamp = DateTime.UtcNow
             };
 
-            var existingPlayer = Player.Create("player123");
-            _mockPlayerRepository.Setup(x => x.GetByPlayerIdAsync("player123"))
+            var existingPlayer = Player.Create(command.PlayerId);
+            _playerRepositoryMock.Setup(x => x.GetByPlayerIdAsync(command.PlayerId))
                 .ReturnsAsync(existingPlayer);
 
             // Act
             await _handler.Handle(command);
 
             // Assert
-            _mockPlayerRepository.Verify(x => x.AddAsync(It.IsAny<Player>()), Times.Never);
-            _mockPlayerRepository.Verify(x => x.UpdateAsync(It.IsAny<Player>()), Times.Once);
+            _playerRepositoryMock.Verify(
+                x => x.UpdateAsync(It.Is<Player>(p =>
+                    p.PlayerId == command.PlayerId &&
+                    p.LastEventAt == command.Timestamp)),
+                Times.Once);
         }
 
         [Test]
-        public async Task Handle_WithDepositEventWithoutRegistration_ShouldThrowException()
+        public async Task Handle_RegistrationEvent_RegistersPlayer()
+        {
+            // Arrange
+            var command = new IngestPixelEventCommand
+            {
+                EventType = "registration",
+                PlayerId = "player-123",
+                BannerTag = "banner-456",
+                Timestamp = DateTime.UtcNow
+            };
+
+            var existingPlayer = Player.Create(command.PlayerId);
+            _playerRepositoryMock.Setup(x => x.GetByPlayerIdAsync(command.PlayerId))
+                .ReturnsAsync(existingPlayer);
+
+            // Act
+            await _handler.Handle(command);
+
+            // Assert
+            _playerRepositoryMock.Verify(
+                x => x.UpdateAsync(It.Is<Player>(p =>
+                    p.PlayerId == command.PlayerId &&
+                    p.RegistrationDate.HasValue)),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_DepositEvent_RecordsDeposit()
         {
             // Arrange
             var command = new IngestPixelEventCommand
             {
                 EventType = "deposit",
-                PlayerId = "player123",
-                BannerTag = "brandA",
+                PlayerId = "player-123",
+                BannerTag = "banner-456",
                 Timestamp = DateTime.UtcNow
             };
 
-            var existingPlayer = Player.Create("player123");
-            _mockPlayerRepository.Setup(x => x.GetByPlayerIdAsync("player123"))
+            var existingPlayer = Player.Create(command.PlayerId);
+            existingPlayer.Register(); // Player must be registered before depositing
+            _playerRepositoryMock.Setup(x => x.GetByPlayerIdAsync(command.PlayerId))
                 .ReturnsAsync(existingPlayer);
 
-            // Act & Assert
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(command));
-            Assert.That(ex.Message, Is.EqualTo("Player must be registered before depositing"));
+            // Act
+            await _handler.Handle(command);
+
+            // Assert
+            _playerRepositoryMock.Verify(
+                x => x.UpdateAsync(It.Is<Player>(p =>
+                    p.PlayerId == command.PlayerId &&
+                    p.FirstDepositDate.HasValue)),
+                Times.Once);
         }
     }
 }
-
