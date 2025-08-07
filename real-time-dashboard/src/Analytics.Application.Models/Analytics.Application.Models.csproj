@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package reference -->
-        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" /> -->
+      <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" />
     </ItemGroup>
 
 </Project>

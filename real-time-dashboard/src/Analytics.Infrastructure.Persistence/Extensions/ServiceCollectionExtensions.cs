@@ -1,5 +1,6 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
+using Affiliate.Platform.UnitOfWork.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Analytics.Domain.Models.Configuration.SqlServer;
@@ -13,8 +14,8 @@ namespace Analytics.Infrastructure.Persistence.Extensions
     {
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
-            // Register our own UnitOfWork factory implementation
-            return services.AddSingleton<IAnalyticsUnitOfWorkFactory, AnalyticsUnitOfWorkFactory>();
+            return services
+                .AddSingleton<IUnitOfWorkFactory<IAnalyticsUnitOfWork>, AnalyticsUnitOfWorkFactory>();
         }
 
         public static IServiceCollection AddDatabase(this IServiceCollection services, SqlServerConfiguration sqlServerConfiguration)
@@ -22,7 +23,8 @@ namespace Analytics.Infrastructure.Persistence.Extensions
             return services
                 .AddMemoryCache()
                 .AddDbContextFactory<AnalyticsContext>(options =>
-                    options.UseSqlServer(sqlServerConfiguration.ConnectionString, dbOptions => { dbOptions.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds); }));
+                    options
+                        .UseSqlServer(sqlServerConfiguration.ConnectionString, dbOptions => { dbOptions.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds); }));
         }
 
         public static IServiceCollection AddMockDatabase(this IServiceCollection services, string databaseName)

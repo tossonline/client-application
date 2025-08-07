@@ -5,49 +5,28 @@
         <LangVersion>default</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Remove missing custom packages and add public alternatives -->
-        
-        <!-- Add public alternatives for testing and mocking -->
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-        <PackageReference Include="Moq" Version="4.20.69" />
-        <PackageReference Include="UnitOfWork.EntityFrameworkCore" Version="7.0.1" />
-        
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
-        <PackageReference Include="coverlet.msbuild" Version="6.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="NUnit" Version="4.0.1"/>
-        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
-        <PackageReference Include="NUnit.Analyzers" Version="3.10.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="6.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="NUnit" Version="4.0.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.0.1" />
+        <PackageReference Include="coverlet.collector" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Analytics.Application.Handlers\Analytics.Application.Handlers.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Application.Translators\Analytics.Application.Translators.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Models\Analytics.Domain.Models.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Infrastructure.Persistence\Analytics.Infrastructure.Persistence.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Commands\Analytics.Domain.Commands.csproj"/>
-        <ProjectReference Include="..\..\src\Analytics.Domain.Events\Analytics.Domain.Events.csproj"/>
+        <ProjectReference Include="..\..\src\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Domain.Commands\Analytics.Domain.Commands.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Domain.Events\Analytics.Domain.Events.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Domain.Repositories\Analytics.Domain.Repositories.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Application.Handlers\Analytics.Application.Handlers.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Infrastructure.Persistence\Analytics.Infrastructure.Persistence.csproj" />
+        <ProjectReference Include="..\..\src\Analytics.Infrastructure.Service\Analytics.Infrastructure.Service.csproj" />
     </ItemGroup>
 
 </Project>

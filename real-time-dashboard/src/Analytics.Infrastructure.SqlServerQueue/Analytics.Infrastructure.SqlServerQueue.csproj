@@ -8,11 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Messaging.SqlServer" Version="2.1.6" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="2.1.1"/> -->
-        <PackageReference Include="prometheus-net" Version="7.0.0" />
+        <PackageReference Include="Affiliate.Platform.Messaging.SqlServer" Version="2.1.9" />
+        <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/>
     </ItemGroup>
 
     <ItemGroup>

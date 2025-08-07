@@ -1,11 +1,13 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analytics.Infrastructure.Service.Controllers
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1.0)]
+    [Route("api/[controller]")]
     public class SampleController : ControllerBase
     {
         [HttpPost]

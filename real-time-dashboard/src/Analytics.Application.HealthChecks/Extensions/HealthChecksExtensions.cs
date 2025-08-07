@@ -1,7 +1,8 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using System.Collections.Generic;
-using System.Linq;
+using Affiliate.Platform.Extensions.HealthChecks.Kafka.Extensions;
+using Affiliate.Platform.Extensions.HealthChecks.Kafka.Options;
+using Affiliate.Platform.Extensions.HealthChecks.SqlServer.Extensions;
 using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -28,17 +29,16 @@ namespace Analytics.Application.HealthChecks.Extensions
                 BootstrapServers = string.Join(",", kafkaConfiguration.Brokers),
                 EnableDeliveryReports = true,
                 Acks = Acks.Leader,
-                SecurityProtocol = string.IsNullOrWhiteSpace(kafkaConfiguration.Username) ? SecurityProtocol.Plaintext : SecurityProtocol.SaslSsl,
-                SaslMechanism = string.IsNullOrWhiteSpace(kafkaConfiguration.Username) ? SaslMechanism.Plain : SaslMechanism.ScramSha256,
+                SecurityProtocol = string.IsNullOrWhiteSpace(kafkaConfiguration.Username) ? null : SecurityProtocol.SaslSsl,
+                SaslMechanism = string.IsNullOrWhiteSpace(kafkaConfiguration.Username) ? null : SaslMechanism.ScramSha256,
                 SaslUsername = string.IsNullOrWhiteSpace(kafkaConfiguration.Username) ? null : kafkaConfiguration.Username,
                 SaslPassword = string.IsNullOrWhiteSpace(kafkaConfiguration.Password) ? null : kafkaConfiguration.Password
             };
 
-            // Replace with a public Kafka health check implementation or stub
-            // healthChecksBuilder.AddKafka(new KafkaHealthCheckOptions(
-            //     config,
-            //     kafkaConfiguration.Topic,
-            //     sourceApplication: configuration.LoggerOptions.Source));
+            healthChecksBuilder.AddKafka(new KafkaHealthCheckOptions(
+                config,
+                kafkaConfiguration.Topic,
+                sourceApplication: configuration.LoggerOptions.Source));
 
             return healthChecksBuilder;
         }

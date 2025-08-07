@@ -1,31 +1,36 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using Affiliate.Platform.Extensions.Service;
+using Affiliate.Platform.Extensions.Service.Configuration;
+using Affiliate.Platform.Extensions.Service.Configuration.Hooks;
+using Analytics.Domain.Models.Configuration;
+using Analytics.Infrastructure.Service.Dependencies;
 
 namespace Analytics.Infrastructure.Service
 {
     internal class Program
     {
-        protected Program() { }
-
-        public static void Main(string[] args)
+        protected Program()
         {
-            var host = Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    // Add configuration sources if needed
-                })
-                .ConfigureServices((context, services) =>
-                {
-                    // Register your services here
-                    // Example: services.AddSingleton<IAnalyticsConfiguration, AnalyticsConfiguration>();
-                    // Add other DI registrations as needed
-                })
-                .Build();
+        }
 
-            host.Run();
+        protected static void Main()
+        {
+            ShellConfigurationManager<AnalyticsConfiguration> configurationManager = new();
+            IAnalyticsConfiguration configuration = configurationManager.UseAppSettings();
+
+            configuration.Hooks = new HookConfiguration
+            {
+                RegisterHealthchecks = HealthCheckRegistration.RegisterDependencies,
+                RegisterDependencies = DependencyRegistration.RegisterDependencies,
+                RegisterFeatures = FeatureRegistration.RegisterDependencies,
+                RegisterControllers = ControllerRegistration.RegisterDependencies,
+                RegisterMetrics = MetricsRegistration.RegisterDependencies,
+                RegisterMiddleware = MiddlewareRegistration.RegisterDependencies
+            };
+
+            Shell shell = new(configuration);
+            shell.Start();
         }
     }
 }

@@ -8,9 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Repository.EntityFramework" Version="8.0.3"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.UnitOfWork.Abstractions" Version="2.1.1"/> -->
+        <PackageReference Include="Affiliate.Platform.Extensions.Repository.EntityFramework" Version="8.0.3"/>
+        <PackageReference Include="Affiliate.Platform.UnitOfWork.Abstractions" Version="2.1.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
@@ -18,9 +17,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1"/>
-        <!-- Use a compatible public alternative for Unit of Work pattern -->
-        <PackageReference Include="UnitOfWork.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -28,8 +25,6 @@
         <ProjectReference Include="..\Analytics.Domain.Observability\Analytics.Domain.Observability.csproj"/>
         <ProjectReference Include="..\Analytics.Domain.Repositories\Analytics.Domain.Repositories.csproj"/>
         <ProjectReference Include="..\Analytics.Domain.UnitOfWork\Analytics.Domain.UnitOfWork.csproj"/>
-        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
-        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj"/>
     </ItemGroup>
 
 </Project>

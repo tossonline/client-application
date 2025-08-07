@@ -1,5 +1,6 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
+using Analytics.Application.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Analytics.Application.Handlers.Extensions
@@ -8,7 +9,10 @@ namespace Analytics.Application.Handlers.Extensions
     {
         public static IServiceCollection AddHandlers(this IServiceCollection services)
         {
-            // TODO: Add Handler injection here using standard DI
+            // Register command handlers
+            services.AddScoped<IIngestPixelEventHandler, IngestPixelEventHandler>();
+            services.AddScoped<IAggregateEventsHandler, AggregateEventsHandler>();
+            
             return services;
         }
     }

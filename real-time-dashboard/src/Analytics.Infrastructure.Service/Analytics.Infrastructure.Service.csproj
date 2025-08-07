@@ -8,42 +8,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="2.1.1"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Logging.Messaging" Version="2.1.1"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Translation.Abstractions" Version="2.1.1"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.TranslationManager" Version="2.1.3" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.BackgroundServices" Version="2.1.6" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Kafka" Version="2.1.8" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.HealthChecks.SqlServer" Version="2.1.3" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.HealthChecks.Kafka" Version="2.1.6" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Messaging.Abstractions" Version="2.1.6" /> -->
-        
-        <!-- Add public alternatives for web API functionality -->
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.6" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
-        <PackageReference Include="prometheus-net" Version="7.0.0" />
-        <PackageReference Include="prometheus-net.AspNetCore" Version="7.0.0" />
-        <PackageReference Include="MassTransit" Version="8.0.0" />
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="8.0.8" />
+        <PackageReference Include="Affiliate.Platform.Extensions.Logging.Messaging" Version="2.1.3"/>
+        <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Analytics.Application.BackgroundJobs\Analytics.Application.BackgroundJobs.csproj"/>
         <ProjectReference Include="..\Analytics.Application.Handlers\Analytics.Application.Handlers.csproj"/>
         <ProjectReference Include="..\Analytics.Application.HealthChecks\Analytics.Application.HealthChecks.csproj"/>
+        <ProjectReference Include="..\Analytics.Application.HealthChecks\Analytics.Application.HealthChecks.csproj"/>
         <ProjectReference Include="..\Analytics.Application.Metrics\Analytics.Application.Metrics.csproj"/>
         <ProjectReference Include="..\Analytics.Application.Translators\Analytics.Application.Translators.csproj"/>
         <ProjectReference Include="..\Analytics.Domain.Models\Analytics.Domain.Models.csproj"/>
         <ProjectReference Include="..\Analytics.Infrastructure.Dapper\Analytics.Infrastructure.Dapper.csproj"/>
         <ProjectReference Include="..\Analytics.Infrastructure.Kafka\Analytics.Infrastructure.Kafka.csproj"/>
-        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
-        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj"/>
     </ItemGroup>
 
 </Project>

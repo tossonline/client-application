@@ -8,8 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="2.1.1"/> -->
+        <PackageReference Include="Affiliate.Platform.Extensions.Service" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
     </ItemGroup>
+
 
 </Project>

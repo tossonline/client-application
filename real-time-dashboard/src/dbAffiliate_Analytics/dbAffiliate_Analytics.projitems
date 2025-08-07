@@ -1,47 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>50950326-BBA6-41D1-B01F-3E0CD31BD07D</SharedGUID>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>dbAffiliate_Analytics</Import_RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
+    <PropertyGroup>
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+        <HasSharedItems>true</HasSharedItems>
+        <SharedGUID>50950326-BBA6-41D1-B01F-3E0CD31BD07D</SharedGUID>
+    </PropertyGroup>
+    <PropertyGroup Label="Configuration">
+        <Import_RootNamespace>dbAffiliate_Analytics</Import_RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)sprocs\usp_DeadLetterCountGet.sql" />
-    <Content Include="$(MSBuildThisFileDirectory)sprocs\usp_AnalyticsArchive.sql" />
-    <Content Include="$(MSBuildThisFileDirectory)up\0001-Create-IngressSchema.ENV.LOCAL.sql" />
-    <Content Include="$(MSBuildThisFileDirectory)up\0002-Create-EgressSchema.ENV.LOCAL.sql" />
+        <Content Include="$(MSBuildThisFileDirectory)sprocs\usp_AnalyticsArchive.sql"/>
+        <Content Include="$(MSBuildThisFileDirectory)up\0001-Create-IngressSchema.ENV.LOCAL.sql"/>
+        <Content Include="$(MSBuildThisFileDirectory)up\0002-Create-EgressSchema.ENV.LOCAL.sql"/>
     <Content Include="$(MSBuildThisFileDirectory)up\0003-Create-GrafanaSchema.ENV.LOCAL.sql" />
     <Content Include="$(MSBuildThisFileDirectory)up\0004-Create-HangfireTables.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)functions\fn_CalculateConversionRate.sql" />
-    <None Include="$(MSBuildThisFileDirectory)functions\fn_GetDateRange.sql" />
-    <None Include="$(MSBuildThisFileDirectory)README.md" />
-    <None Include="$(MSBuildThisFileDirectory)runAfterCreateDatabase\0001_InitialSeedData.sql" />
-    <None Include="$(MSBuildThisFileDirectory)runBeforeUp\0001_DatabaseSettings.sql" />
-    <None Include="$(MSBuildThisFileDirectory)sprocs\sp_CalculateCampaignMetrics.sql" />
-    <None Include="$(MSBuildThisFileDirectory)sprocs\sp_GetCampaignPerformance.sql" />
-    <None Include="$(MSBuildThisFileDirectory)sprocs\sp_UpsertEventSummary.sql" />
-    <None Include="$(MSBuildThisFileDirectory)sprocs\usp_AnalyticsArchive.sql" />
-    <None Include="$(MSBuildThisFileDirectory)sprocs\usp_DeadLetterCountGet.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0001-Create-IngressSchema.ENV.LOCAL.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0001_CreatePixelEventsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0002-Create-EgressSchema.ENV.LOCAL.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0002_CreatePlayersTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0003-Create-GrafanaSchema.ENV.LOCAL.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0003_CreateEventSummariesTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0004-Create-HangfireTables.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0004_CreateDashboardsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0005_CreateCampaignMetricsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0006_CreateAnomalyDetectionsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0007_CreateGeoAnalyticsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0008_CreateAnalyticsJobsTable.sql" />
-    <None Include="$(MSBuildThisFileDirectory)up\0009_CreateIndexes.sql" />
-    <None Include="$(MSBuildThisFileDirectory)views\vw_CampaignPerformanceSummary.sql" />
-    <None Include="$(MSBuildThisFileDirectory)views\vw_DailyMetricsSummary.sql" />
-    <None Include="$(MSBuildThisFileDirectory)views\vw_PlayerFunnelAnalysis.sql" />
-  </ItemGroup>
+    </ItemGroup>
 </Project>

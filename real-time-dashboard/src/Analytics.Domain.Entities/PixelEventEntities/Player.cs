@@ -1,52 +1,60 @@
 using System;
-using Analytics.Domain.Abstractions;
 
 namespace Analytics.Domain.Entities
 {
     /// <summary>
-    /// Represents a player and their lifecycle events.
+    /// Represents a player in the analytics system
     /// </summary>
-    public class Player : IPlayer
+    public class Player
     {
-        public string PlayerId { get; private set; }
-        public DateTime FirstSeen { get; private set; }
-        public DateTime? LastEventAt { get; private set; }
-        public DateTime? RegistrationAt { get; private set; }
-        public DateTime? DepositAt { get; private set; }
-        public int TotalDeposits { get; private set; }
+        public int Id { get; set; }
+        public string PlayerId { get; set; } = string.Empty;
+        public DateTime FirstSeen { get; set; }
+        public DateTime? LastEventAt { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+        public DateTime? FirstDepositDate { get; set; }
 
-        private Player(string playerId, DateTime firstSeen)
-        {
-            PlayerId = playerId;
-            FirstSeen = firstSeen;
-        }
-
+        /// <summary>
+        /// Create a new player
+        /// </summary>
         public static Player Create(string playerId)
         {
-            return new Player(playerId, DateTime.UtcNow);
+            if (string.IsNullOrWhiteSpace(playerId))
+                throw new ArgumentException("Player ID cannot be null or empty", nameof(playerId));
+
+            return new Player
+            {
+                PlayerId = playerId,
+                FirstSeen = DateTime.UtcNow
+            };
         }
 
+        /// <summary>
+        /// Register the player
+        /// </summary>
         public void Register()
         {
-            if (RegistrationAt.HasValue)
-                throw new InvalidOperationException("Player already registered.");
-            RegistrationAt = DateTime.UtcNow;
-            UpdateLastEvent();
+            RegistrationDate = DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// Record a deposit for the player
+        /// </summary>
         public void Deposit()
         {
-            if (!RegistrationAt.HasValue)
-                throw new InvalidOperationException("Player must be registered before depositing.");
-            if (!DepositAt.HasValue)
-                DepositAt = DateTime.UtcNow;
-            TotalDeposits++;
-            UpdateLastEvent();
+            if (!RegistrationDate.HasValue)
+                throw new InvalidOperationException("Player must be registered before depositing");
+
+            if (!FirstDepositDate.HasValue)
+                FirstDepositDate = DateTime.UtcNow;
         }
 
-        public void UpdateLastEvent()
+        /// <summary>
+        /// Update the last event timestamp
+        /// </summary>
+        public void UpdateLastEvent(DateTime eventTime)
         {
-            LastEventAt = DateTime.UtcNow;
+            LastEventAt = eventTime;
         }
     }
 }

@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" /> -->
+        <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" />
     </ItemGroup>
 
 </Project>

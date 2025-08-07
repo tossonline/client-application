@@ -1,5 +1,6 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
+using Affiliate.Platform.UnitOfWork.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Analytics.Domain.Observability.Messages;
 using Analytics.Domain.UnitOfWork;
@@ -8,12 +9,7 @@ using Analytics.Infrastructure.Persistence.Exceptions;
 
 namespace Analytics.Infrastructure.Persistence.UnitOfWork
 {
-    public interface IAnalyticsUnitOfWorkFactory
-    {
-        IAnalyticsUnitOfWork BuildUnitOfWork();
-    }
-
-    public sealed class AnalyticsUnitOfWorkFactory : IAnalyticsUnitOfWorkFactory
+    public sealed class AnalyticsUnitOfWorkFactory : IUnitOfWorkFactory<IAnalyticsUnitOfWork>
     {
         private readonly IDbContextFactory<AnalyticsContext> _contextFactory;
 

@@ -2,7 +2,6 @@
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Analytics.Domain.Observability.Messages;
 using Analytics.Domain.Repositories;
 using Analytics.Domain.UnitOfWork;
@@ -15,15 +14,32 @@ namespace Analytics.Infrastructure.Persistence.UnitOfWork
     public sealed class AnalyticsUnitOfWork : IAnalyticsUnitOfWork
     {
         private readonly AnalyticsContext _context;
-        private IDbContextTransaction? _transaction;
 
         public AnalyticsUnitOfWork(AnalyticsContext context)
         {
             _context = context;
-            DashboardsRepository = new DashboardsRepository(_context);
+
+            DashboardsRepository = new DashboardsRepository(_context.Dashboardss);
         }
 
         public IDashboardsRepository DashboardsRepository { get; set; }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
+        public int SaveChanges()
+        {
+            try
+            {
+                return _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw HandleException(ex);
+            }
+        }
 
         public async Task<int> SaveChangesAsync()
         {
@@ -35,37 +51,6 @@ namespace Analytics.Infrastructure.Persistence.UnitOfWork
             {
                 throw HandleException(ex);
             }
-        }
-
-        public async Task BeginTransactionAsync()
-        {
-            _transaction = await _context.Database.BeginTransactionAsync();
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            if (_transaction != null)
-            {
-                await _transaction.CommitAsync();
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            if (_transaction != null)
-            {
-                await _transaction.RollbackAsync();
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        public void Dispose()
-        {
-            _transaction?.Dispose();
-            _context.Dispose();
         }
 
         private static Exception HandleException(Exception exception)

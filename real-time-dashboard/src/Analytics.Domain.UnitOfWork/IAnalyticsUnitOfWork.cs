@@ -1,16 +1,12 @@
 // Copyright (c) DigiOutsource. All rights reserved.
 
+using Affiliate.Platform.UnitOfWork.Abstractions;
 using Analytics.Domain.Repositories;
 
 namespace Analytics.Domain.UnitOfWork
 {
-    public interface IAnalyticsUnitOfWork
+    public interface IAnalyticsUnitOfWork : IUnitOfWork
     {
         IDashboardsRepository DashboardsRepository { get; set; }
-        Task<int> SaveChangesAsync();
-        Task BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
-        void Dispose();
     }
 }

@@ -8,10 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" /> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/> -->
-        <PackageReference Include="prometheus-net" Version="7.0.0" />
+        <PackageReference Include="Affiliate.Platform.Extensions.Observability" Version="2.1.7" />
+        <PackageReference Include="Affiliate.Platform.Metrics.Prometheus" Version="8.0.5"/>
     </ItemGroup>
 
     <ItemGroup>

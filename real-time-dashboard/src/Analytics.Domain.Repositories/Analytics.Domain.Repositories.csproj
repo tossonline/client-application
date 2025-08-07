@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj" />
-        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj" />
+        <ProjectReference Include="..\Analytics.Domain.Entities\Analytics.Domain.Entities.csproj"/>
+        <ProjectReference Include="..\Analytics.Domain.Abstractions\Analytics.Domain.Abstractions.csproj"/>
     </ItemGroup>
 
 </Project>

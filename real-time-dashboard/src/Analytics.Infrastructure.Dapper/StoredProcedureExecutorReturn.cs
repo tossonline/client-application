@@ -2,14 +2,17 @@
 
 using System.Data;
 using System.Diagnostics;
+using Affiliate.Platform.Messaging.Abstractions.Messages;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Analytics.Domain.Dapper;
+using Analytics.Domain.Observability.Messages;
 using Analytics.Infrastructure.Dapper.Exceptions;
 
 namespace Analytics.Infrastructure.Dapper
 {
     public sealed class StoredProcedureExecutorReturn<TMessage> : IStoredProcedureExecutorReturn<TMessage>
+        where TMessage : Message
     {
         private const int QUERY_TIMEOUT = 600;
 
@@ -30,17 +33,17 @@ namespace Analytics.Infrastructure.Dapper
                 catch (TimeoutException ex)
                 {
                     timer.Stop();
-                    throw new DapperException($"Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
+                    throw new DapperException($"{ErrorMessages.DAPPER_TIMEOUT_ERROR} - Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
                 }
                 catch (SqlException ex)
                 {
                     timer.Stop();
-                    throw new DapperException($"Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
+                    throw new DapperException($"{ErrorMessages.DAPPER_SQL_EXCEPTION_ERROR} - Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
                 }
                 catch (Exception ex)
                 {
                     timer.Stop();
-                    throw new DapperException($"Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
+                    throw new DapperException($"{ErrorMessages.DAPPER_NON_SQL_EXCEPTION_ERROR} - Execution Time (Seconds) {timer.Elapsed.Seconds}", ex);
                 }
                 finally
                 {

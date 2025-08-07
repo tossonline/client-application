@@ -8,12 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Commented out custom package references -->
-        <!-- <PackageReference Include="Affiliate.Platform.Translation.Abstractions" Version="2.1.1"/> -->
-        <!-- <PackageReference Include="Affiliate.Platform.Extensions.TranslationManager" Version="2.1.3" /> -->
-        <!-- Add public alternatives -->
-        <PackageReference Include="FluentValidation" Version="11.6.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Affiliate.Platform.Translation.Abstractions" Version="2.1.1"/>
+        <PackageReference Include="Affiliate.Platform.Extensions.TranslationManager" Version="2.1.3" />
     </ItemGroup>
 
 </Project>
