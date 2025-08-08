@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Analytics.Domain.Entities;
 using NUnit.Framework;
 
@@ -8,69 +7,144 @@ namespace Analytics.Tests.Domain.Entities
     [TestFixture]
     public class PixelEventTests
     {
+        private const string ValidPlayerId = "player123";
+        private const string ValidBannerTag = "campaign1-banner-300x250";
+
         [Test]
-        public void PixelEvent_WhenCreated_HasExpectedDefaults()
+        public void CreateVisit_WithValidData_CreatesEvent()
+        {
+            // Act
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, ValidBannerTag);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(pixelEvent.EventType, Is.EqualTo("visit"));
+                Assert.That(pixelEvent.PlayerId, Is.EqualTo(ValidPlayerId));
+                Assert.That(pixelEvent.BannerTag, Is.EqualTo(ValidBannerTag));
+                Assert.That(pixelEvent.CampaignId, Is.EqualTo("campaign1"));
+                Assert.That(pixelEvent.Timestamp, Is.LessThanOrEqualTo(DateTime.UtcNow));
+            });
+        }
+
+        [Test]
+        public void CreateRegistration_WithValidData_CreatesEvent()
+        {
+            // Act
+            var pixelEvent = PixelEvent.CreateRegistration(ValidPlayerId, ValidBannerTag);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(pixelEvent.EventType, Is.EqualTo("registration"));
+                Assert.That(pixelEvent.PlayerId, Is.EqualTo(ValidPlayerId));
+                Assert.That(pixelEvent.BannerTag, Is.EqualTo(ValidBannerTag));
+            });
+        }
+
+        [Test]
+        public void CreateDeposit_WithValidData_CreatesEvent()
+        {
+            // Act
+            var pixelEvent = PixelEvent.CreateDeposit(ValidPlayerId, ValidBannerTag);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(pixelEvent.EventType, Is.EqualTo("deposit"));
+                Assert.That(pixelEvent.PlayerId, Is.EqualTo(ValidPlayerId));
+                Assert.That(pixelEvent.BannerTag, Is.EqualTo(ValidBannerTag));
+            });
+        }
+
+        [Test]
+        public void Create_WithNullPlayerId_ThrowsArgumentException()
+        {
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => 
+                PixelEvent.CreateVisit(null, ValidBannerTag));
+            Assert.That(ex.Message, Does.Contain("Player ID cannot be null"));
+        }
+
+        [Test]
+        public void Create_WithEmptyBannerTag_ThrowsArgumentException()
+        {
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => 
+                PixelEvent.CreateVisit(ValidPlayerId, string.Empty));
+            Assert.That(ex.Message, Does.Contain("Banner tag cannot be null"));
+        }
+
+        [Test]
+        public void AddMetadata_WithValidData_AddsToMetadata()
+        {
+            // Arrange
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, ValidBannerTag);
+
+            // Act
+            pixelEvent.AddMetadata("browser", "chrome");
+            pixelEvent.AddMetadata("os", "windows");
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(pixelEvent.Metadata, Does.ContainKey("browser"));
+                Assert.That(pixelEvent.Metadata["browser"], Is.EqualTo("chrome"));
+                Assert.That(pixelEvent.Metadata, Does.ContainKey("os"));
+                Assert.That(pixelEvent.Metadata["os"], Is.EqualTo("windows"));
+            });
+        }
+
+        [Test]
+        public void AddMetadata_WithNullKey_ThrowsArgumentException()
+        {
+            // Arrange
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, ValidBannerTag);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => 
+                pixelEvent.AddMetadata(null, "value"));
+            Assert.That(ex.Message, Does.Contain("key cannot be null"));
+        }
+
+        [Test]
+        public void IsValid_WithValidEvent_ReturnsTrue()
+        {
+            // Arrange
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, ValidBannerTag);
+
+            // Act & Assert
+            Assert.That(pixelEvent.IsValid(), Is.True);
+        }
+
+        [TestCase("campaign1-banner-300x250", "campaign1")]
+        [TestCase("campaign2", "campaign2")]
+        [TestCase("campaign3-other", "campaign3")]
+        public void ExtractCampaignId_ExtractsCorrectly(string bannerTag, string expectedCampaignId)
         {
             // Arrange & Act
-            var pixelEvent = new PixelEvent();
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, bannerTag);
 
             // Assert
-            Assert.That(pixelEvent.EventType, Is.EqualTo(string.Empty));
-            Assert.That(pixelEvent.PlayerId, Is.EqualTo(string.Empty));
-            Assert.That(pixelEvent.BannerTag, Is.EqualTo(string.Empty));
-            Assert.That(pixelEvent.Metadata, Is.Not.Null);
-            Assert.That(pixelEvent.Metadata, Is.Empty);
-            Assert.That(pixelEvent.SourceIp, Is.Null);
-            Assert.That(pixelEvent.UserAgent, Is.Null);
+            Assert.That(pixelEvent.CampaignId, Is.EqualTo(expectedCampaignId));
         }
 
         [Test]
-        public void PixelEvent_WithValues_SetsPropertiesCorrectly()
+        public void Create_WithSourceIpAndUserAgent_SetsProperties()
         {
             // Arrange
-            var timestamp = DateTime.UtcNow;
-            var metadata = new Dictionary<string, string>
-            {
-                { "key1", "value1" },
-                { "key2", "value2" }
-            };
+            const string sourceIp = "192.168.1.1";
+            const string userAgent = "Mozilla/5.0";
 
             // Act
-            var pixelEvent = new PixelEvent
+            var pixelEvent = PixelEvent.CreateVisit(ValidPlayerId, ValidBannerTag, sourceIp, userAgent);
+
+            // Assert
+            Assert.Multiple(() =>
             {
-                EventType = "visit",
-                PlayerId = "player-123",
-                BannerTag = "banner-456",
-                Metadata = metadata,
-                SourceIp = "127.0.0.1",
-                UserAgent = "test-agent",
-                Timestamp = timestamp
-            };
-
-            // Assert
-            Assert.That(pixelEvent.EventType, Is.EqualTo("visit"));
-            Assert.That(pixelEvent.PlayerId, Is.EqualTo("player-123"));
-            Assert.That(pixelEvent.BannerTag, Is.EqualTo("banner-456"));
-            Assert.That(pixelEvent.Metadata, Is.EqualTo(metadata));
-            Assert.That(pixelEvent.SourceIp, Is.EqualTo("127.0.0.1"));
-            Assert.That(pixelEvent.UserAgent, Is.EqualTo("test-agent"));
-            Assert.That(pixelEvent.Timestamp, Is.EqualTo(timestamp));
-        }
-
-        [Test]
-        public void PixelEvent_MetadataIsModifiable()
-        {
-            // Arrange
-            var pixelEvent = new PixelEvent();
-
-            // Act
-            pixelEvent.Metadata["key1"] = "value1";
-            pixelEvent.Metadata["key2"] = "value2";
-
-            // Assert
-            Assert.That(pixelEvent.Metadata.Count, Is.EqualTo(2));
-            Assert.That(pixelEvent.Metadata["key1"], Is.EqualTo("value1"));
-            Assert.That(pixelEvent.Metadata["key2"], Is.EqualTo("value2"));
+                Assert.That(pixelEvent.SourceIp, Is.EqualTo(sourceIp));
+                Assert.That(pixelEvent.UserAgent, Is.EqualTo(userAgent));
+            });
         }
     }
 }
