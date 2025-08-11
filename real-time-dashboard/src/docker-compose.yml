@@ -27,7 +27,7 @@ services:
   # Url: http://localhost:3000/
   #=============================================================
   grafana:
-    image: artifactory.tools1-az1.digi.is/epea-docker-pull/grafana/grafana:9.1.5
+    image: grafana/grafana:9.1.5
     container_name: grafana
     restart: unless-stopped
     ports:
@@ -92,7 +92,7 @@ services:
   # Url: http://localhost:9000/
   #=============================================================  
   sonarqube:
-    image: artifactory.tools1-az1.digi.is/epea-docker-full/sonarqube:latest
+    image: sonarqube:latest
     container_name: sonarqube
     ports:
       - "9000:9000"
@@ -264,7 +264,7 @@ services:
   # Deploy Grafana Dashboard
   #=============================================================
   grafana_tools:
-    image: artifactory.tools1-az1.digi.is/epea-docker-affiliate-platform/affiliate-platform-containers-grafana-tools:1.0.9
+    image: ghcr.io/your-org/grafana-tools:latest
     entrypoint: [ "/bin/sh","-c" ]
     container_name: grafana_tools
     depends_on:
@@ -275,7 +275,7 @@ services:
       - |
         sleep 20
         
-        /tools/Grafana.Tools.Console "/deploy/grafana" "local" "Basic" "YWRtaW46YWRtaW4=" "IGaming Affiliates" "igaming_affiliates_folder"
+        /tools/Grafana.Tools.Console "/deploy/grafana" "local" "Basic" "${GRAFANA_BASIC_AUTH_B64}" "${GRAFANA_ORG_NAME}" "${GRAFANA_FOLDER_NAME}"
   #=============================================================
   # Deploy Grafana Dashboard
   #=============================================================

@@ -4,7 +4,7 @@
 
 While explicit business rules may not yet be codified, the following **implicit rules** are applied:
 
-1. **Each pixel event must include**: event type, player ID, and banner tag (as per the [current pixel specification](https://digioutsource.atlassian.net/wiki/spaces/AW/pages/7483065396/Pixels)).
+1. **Each pixel event must include**: event type, player ID, and banner tag (as per the current pixel specification maintained internally).
 2. **Duplicate events are not aggregated** more than once per day per type.
 ---
 
@@ -16,7 +16,7 @@ This solution implements an **event-driven, real-time analytics platform** for t
 
 ### Key Components
 
-- **Pixel Scripts**: Embedded in affiliate or brand websites, sending GET requests to tracking endpoints (e.g., `/visit`, `/registration`, `/deposit`) as described in the [current pixel specification](https://digioutsource.atlassian.net/wiki/spaces/AW/pages/7483065396/Pixels).
+- **Pixel Scripts**: Embedded in affiliate or brand websites, sending GET requests to tracking endpoints (e.g., `/visit`, `/registration`, `/deposit`) as described in the current internal pixel specification.
 - **Ingestion Service**: Service that validates, normalizes, and enqueues event JSON into Kafka.
 - **Kafka**: Durable, decoupled message queue for all incoming events (see `deploy/kafka/`).
 - **Cron Aggregator**: Scheduled service that consumes the Kafka queue and aggregates data into structured metrics.

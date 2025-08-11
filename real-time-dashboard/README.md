@@ -203,6 +203,16 @@ src/
    dotnet run --project src/Analytics.Infrastructure.Service
    ```
 
+## Documentation
+
+- Introduction: docs/introduction/introduction.md
+- Solution Overview: docs/solution/solution.md
+- Application API: docs/application/application.md
+- Deployment: docs/deployment/deployment.md
+- Running Locally: docs/running-locally/running-locally.md
+- External Dependencies: docs/external-dependencies/external-dependencies.md
+- Product Requirements Document (PRD): docs/requirements/prd.md
+
 ## Contributing
 
 1. Fork the repository

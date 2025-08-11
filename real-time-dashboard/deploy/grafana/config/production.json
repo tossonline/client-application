@@ -1,5 +1,5 @@
 {
-  "GrafanaDomain": "https://grafana.az1-internal.ne.digi.is",
+  "GrafanaDomain": "${GRAFANA_DOMAIN}",
   "Title": "Agnostic Affiliate Program | Affiliate Analytics",
   "DashboardUid": "affiliate_analytics_dashboard",
   "FolderUid": "51Cix_zIk",

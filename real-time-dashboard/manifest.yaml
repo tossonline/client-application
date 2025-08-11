@@ -40,11 +40,11 @@ development:
     - name: .NET
       reference: 6E74C6A2-B390-48AC-B050-4048D3AA5F55
   links:
-    repository: <Link>
-    jira: <Link>
-    grafana: <Link>
-    kibana: <Link>
-    sonarqube: <Link>
+    repository: <REPOSITORY_URL>
+    jira: <JIRA_URL>
+    grafana: <GRAFANA_URL>
+    kibana: <KIBANA_URL>
+    sonarqube: <SONARQUBE_URL>
 
 deployment:
   deliveryModel:
