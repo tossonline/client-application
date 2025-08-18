@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Analytics.Domain.Commands;
-using Analytics.Domain.Entities;
-using Analytics.Domain.Repositories;
+using Analytics.Domain.Services.Events;
 using Microsoft.Extensions.Logging;
 
 namespace Analytics.Application.Handlers
@@ -13,17 +11,14 @@ namespace Analytics.Application.Handlers
     /// </summary>
     public class AggregateEventsHandler : IAggregateEventsHandler
     {
-        private readonly IPixelEventRepository _pixelEventRepository;
-        private readonly IEventSummaryRepository _eventSummaryRepository;
+        private readonly IEventAggregationService _eventAggregationService;
         private readonly ILogger<AggregateEventsHandler> _logger;
 
         public AggregateEventsHandler(
-            IPixelEventRepository pixelEventRepository,
-            IEventSummaryRepository eventSummaryRepository,
+            IEventAggregationService eventAggregationService,
             ILogger<AggregateEventsHandler> logger)
         {
-            _pixelEventRepository = pixelEventRepository ?? throw new ArgumentNullException(nameof(pixelEventRepository));
-            _eventSummaryRepository = eventSummaryRepository ?? throw new ArgumentNullException(nameof(eventSummaryRepository));
+            _eventAggregationService = eventAggregationService ?? throw new ArgumentNullException(nameof(eventAggregationService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -32,33 +27,15 @@ namespace Analytics.Application.Handlers
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            _logger.LogInformation("Aggregating events for date: {EventDate}", command.EventDate);
+            _logger.LogInformation("Starting event aggregation for date: {EventDate}", command.EventDate);
 
             try
             {
-                // Get events for the specified date
-                var events = await _pixelEventRepository.GetByDateAsync(command.EventDate);
+                // Use the domain service to aggregate events
+                var summaries = await _eventAggregationService.AggregateEventsForDateAsync(command.EventDate);
 
-                // Group events by type and banner tag
-                var groupedEvents = events
-                    .GroupBy(e => new { e.EventType, e.BannerTag })
-                    .Select(g => new EventSummary
-                    {
-                        EventDate = command.EventDate,
-                        EventType = g.Key.EventType,
-                        BannerTag = g.Key.BannerTag,
-                        Count = g.Count()
-                    })
-                    .ToList();
-
-                // Save aggregated summaries
-                foreach (var summary in groupedEvents)
-                {
-                    await _eventSummaryRepository.AddAsync(summary);
-                }
-
-                _logger.LogInformation("Successfully aggregated {Count} event summaries for date: {EventDate}", 
-                    groupedEvents.Count, command.EventDate);
+                _logger.LogInformation("Successfully completed event aggregation for date: {EventDate}. Generated {SummaryCount} summaries", 
+                    command.EventDate, summaries.Count());
             }
             catch (Exception ex)
             {
